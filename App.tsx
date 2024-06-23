@@ -1,20 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet } from "react-native";
+import Home from "./src/pages/home/Home";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { useAuthContext } from "./src/hooks/useAuthContext";
+import Albums from "./src/pages/albums/Albums";
+import Login from "./src/pages/login/Login";
+import Signup from "./src/pages/signup/Signup";
 
 export default function App() {
+  const Drawer = createDrawerNavigator();
+  const { state } = useAuthContext();
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <NavigationContainer>
+      {state.authIsReady && (
+        <Drawer.Navigator initialRouteName="Home">
+          {state.user ? (
+            <>
+              <Drawer.Screen name="Albums" component={Albums} />
+              <Drawer.Screen name="Home" component={Home} />
+            </>
+          ) : (
+            <>
+              <Drawer.Screen name="Login" component={Login} />
+              <Drawer.Screen name="Signup" component={Signup} />
+            </>
+          )}
+        </Drawer.Navigator>
+      )}
       <StatusBar style="auto" />
-    </View>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

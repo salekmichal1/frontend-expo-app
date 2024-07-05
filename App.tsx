@@ -9,6 +9,25 @@ import Albums from "./src/pages/albums/Albums";
 import Login from "./src/pages/login/Login";
 import Signup from "./src/pages/signup/Signup";
 
+// function NavigationMenu() {
+//   const { state } = useAuthContext();
+//   return (
+//     <Drawer.Navigator>
+//       {state.user ? (
+//         <>
+//           <Drawer.Screen name="Albums" component={Albums} />
+//           <Drawer.Screen name="Home" component={Home} />
+//         </>
+//       ) : (
+//         <>
+//           <Drawer.Screen name="Login" component={Login} />
+//           <Drawer.Screen name="Signup" component={Signup} />
+//         </>
+//       )}
+//     </Drawer.Navigator>
+//   );
+// }
+
 export default function App() {
   const Drawer = createDrawerNavigator();
   const { state } = useAuthContext();

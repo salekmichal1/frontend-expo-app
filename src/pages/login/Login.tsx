@@ -3,6 +3,7 @@ import { Button, Input, Text } from "react-native-elements";
 import { useLogin } from "../../hooks/useLogin";
 import { GestureResponderEvent, View } from "react-native";
 import { StyleSheet } from "react-native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ export default function Login() {
     e.preventDefault();
     login(email, password);
   };
-  
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>

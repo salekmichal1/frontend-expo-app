@@ -43,9 +43,8 @@ export function useLogin() {
         // dispatch login action
         localStorage.setItem("token", user.token);
         dispatch({ type: UserSateType.LOGIN, payload: user });
-        console.log(navigation);
         // navigation.navigate({ name: "Home" });
-        navigation.dispatch(CommonActions.navigate({ name: "Home" }));
+        // navigation.dispatch(CommonActions.navigate({ name: "Home" }));
       } else {
         throw Error("Invalid email or password");
       }

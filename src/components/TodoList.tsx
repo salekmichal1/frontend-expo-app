@@ -123,7 +123,10 @@ export default function TodoList(todos: { todos: Todo[] }) {
   // };
 
   return (
-    <ScrollView style={styles.todoList}>
+    <ScrollView
+      style={{ width: "100%" }}
+      contentContainerStyle={styles.todoList}
+    >
       {todosArr.map((todo) => (
         <View key={todo.id} style={styles.todo}>
           <View style={styles.todoIcons}>
@@ -200,7 +203,6 @@ const styles = StyleSheet.create({
     marginTop: 80,
     marginBottom: 80,
     alignItems: "center",
-    width: "100%",
   },
   todo: {
     width: 300,

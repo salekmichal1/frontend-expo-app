@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules/*
+!node_modules/expo/
+node_modules/expo/*
 !node_modules/expo/AppEntry.js
 
 # Expo

@@ -8,6 +8,8 @@ import { useAuthContext } from "./src/hooks/useAuthContext";
 import Albums from "./src/pages/albums/Albums";
 import Login from "./src/pages/login/Login";
 import Signup from "./src/pages/signup/Signup";
+import CreatePosts from "./src/pages/createPosts/createPosts";
+import Posts from "./src/pages/posts/Posts";
 
 export default function App() {
   const Drawer = createDrawerNavigator();
@@ -20,6 +22,8 @@ export default function App() {
             <>
               <Drawer.Screen name="Home" component={Home} />
               <Drawer.Screen name="Albums" component={Albums} />
+              <Drawer.Screen name="CreatePosts" component={CreatePosts} />
+              <Drawer.Screen name="Posts" component={Posts} />
             </>
           ) : (
             <>

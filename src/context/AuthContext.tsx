@@ -72,6 +72,8 @@ export const AuthContextProvider = function ({
 
           if (user) {
             dispatch({ type: UserSateType.AUTH_IS_READY, payload: user });
+          } else {
+            dispatch({ type: UserSateType.AUTH_IS_READY, payload: null });
           }
         } catch (err: any) {
           console.error(err.message);

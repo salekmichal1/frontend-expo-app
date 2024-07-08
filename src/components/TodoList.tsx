@@ -4,7 +4,13 @@ import { DeleteIcon, EditIcon, DoneIcon, BlockIcon } from "../../assets/Svg";
 import { useEffect, useRef, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { ScrollView, TextInput, View } from "react-native";
+import {
+  Dimensions,
+  Pressable,
+  ScrollView,
+  TextInput,
+  View,
+} from "react-native";
 
 export default function TodoList(todos: { todos: Todo[] }) {
   const { state } = useAuthContext();
@@ -59,18 +65,6 @@ export default function TodoList(todos: { todos: Todo[] }) {
   useEffect(() => {
     ref.current?.focus();
   }, [editingTodoId]);
-
-  const handleEditdDone = function (e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === "Enter") {
-      console.log(editingTodoText);
-
-      if (editingTodoText) {
-        patchDataEdit({ title: editingTodoText });
-      }
-      setEditingTodo(null);
-      // setEditingTodoText(null);
-    }
-  };
 
   const handleEditdDoneLostFocus = function () {
     console.log(editingTodoText);
@@ -128,7 +122,11 @@ export default function TodoList(todos: { todos: Todo[] }) {
       contentContainerStyle={styles.todoList}
     >
       {todosArr.map((todo) => (
-        <View key={todo.id} style={styles.todo}>
+        <LinearGradient
+          colors={["#39b385", "#9be15d"]}
+          key={todo.id}
+          style={styles.todo}
+        >
           <View style={styles.todoIcons}>
             {todo.completed === true ? (
               <BlockIcon
@@ -166,9 +164,9 @@ export default function TodoList(todos: { todos: Todo[] }) {
               }}
             />
           </View>
-          <p>Status: {todo.completed ? "Finished" : "Unfinished"}</p>
+          <Text>Status: {todo.completed ? "Finished" : "Unfinished"}</Text>
 
-          {editingTodoId !== todo.id && <p>Task: {todo.title}</p>}
+          {editingTodoId !== todo.id && <Text>Task: {todo.title}</Text>}
           {editingTodoId === todo.id && (
             <View style={styles.todoInputBox}>
               <Text>Task: </Text>
@@ -181,35 +179,40 @@ export default function TodoList(todos: { todos: Todo[] }) {
                   setEditingTodoText(e.nativeEvent.text);
                 }}
                 defaultValue={todo.title}
-                // onKeyDown={handleEditdDone}
                 onBlur={handleEditdDoneLostFocus}
               />
             </View>
           )}
-        </View>
+        </LinearGradient>
       ))}
-      <button style={styles.todoBtn} onClick={handleAddTodo}>
-        Add todo
-      </button>
+      <Pressable style={styles.todoBtn} onPress={handleAddTodo}>
+        <Text style={styles.todoBtnText}>Add todo</Text>
+      </Pressable>
     </ScrollView>
   );
 }
 
 import { StyleSheet } from "react-native";
 import { Text } from "react-native-elements";
+import { LinearGradient } from "expo-linear-gradient";
+
+const windowHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   todoList: {
     marginTop: 80,
     marginBottom: 80,
+    flex: 1,
     alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
   },
   todo: {
     width: 300,
     color: "#222",
-    backgroundColor: "linear-gradient(to top left, #39b385, #9be15d)", // Note: LinearGradient needs to be implemented using a separate component in React Native
     padding: 20,
     paddingBottom: 40,
+    marginVertical: 10,
     borderRadius: 4,
     elevation: 4, // boxShadow equivalent in React Native for Android
     // iOS shadow properties
@@ -253,21 +256,26 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 4,
     padding: 6,
-    fontFamily: "Poppins, sans-serif", // Ensure the font is available in your React Native project
   },
   todoBtn: {
-    width: 340,
-    backgroundColor: "linear-gradient(to top left, #e52a5a, #ff585f)", // Note: LinearGradient needs to be implemented using a separate component in React Native
-    color: "#fff",
-    fontSize: 16,
-    borderRadius: 4,
-    fontFamily: "Poppins, sans-serif", // Ensure the font is available
-    minHeight: 150,
-    elevation: 4, // boxShadow equivalent in React Native for Android
-    // iOS shadow properties
-    shadowColor: "#000",
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 3, // Add some elevation for Android
+    shadowColor: "#000", // Shadow for iOS
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.09,
-    shadowRadius: 4,
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    marginTop: 10,
+    backgroundColor: "#4CAF50",
+  },
+  todoBtnText: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
   },
 });

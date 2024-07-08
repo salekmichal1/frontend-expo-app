@@ -8,12 +8,13 @@ import { useAuthContext } from "./src/hooks/useAuthContext";
 import Albums from "./src/pages/albums/Albums";
 import Login from "./src/pages/login/Login";
 import Signup from "./src/pages/signup/Signup";
-import CreatePosts from "./src/pages/createPosts/createPosts";
+import CreatePosts from "./src/pages/createPosts/CreatePosts";
 import Posts from "./src/pages/posts/Posts";
 
 export default function App() {
   const Drawer = createDrawerNavigator();
   const { state } = useAuthContext();
+
   return (
     <NavigationContainer>
       {state.authIsReady && (

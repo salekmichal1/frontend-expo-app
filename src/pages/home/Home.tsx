@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native";
+import { ScrollView, Text } from "react-native";
 import TodoList from "../../components/TodoList";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useFetch } from "../../hooks/useFetch";
@@ -13,19 +13,18 @@ export default function Home() {
   );
 
   return (
-    <View style={styles.container}>
-      {error && <p>{error.toString()}</p>}
-      {isPending && <p className="loading">Loading...</p>}
+    <ScrollView contentContainerStyle={styles.container}>
+      {error && <Text>{error.toString()}</Text>}
+      {isPending && <Text>Loading...</Text>}
       {data && <TodoList todos={data} />}
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 50,
   },
 });

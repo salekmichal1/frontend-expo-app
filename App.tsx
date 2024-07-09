@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import Home from "./src/pages/home/Home";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useAuthContext } from "./src/hooks/useAuthContext";
@@ -10,6 +10,35 @@ import Login from "./src/pages/login/Login";
 import Signup from "./src/pages/signup/Signup";
 import CreatePosts from "./src/pages/createPosts/CreatePosts";
 import Posts from "./src/pages/posts/Posts";
+import {
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
+import { View } from "react-native";
+import { useLogout } from "./src/hooks/useLogout";
+
+const CustomDrawerContent = (props: any) => {
+  const { state } = useAuthContext();
+  const { logout } = useLogout();
+  return (
+    <DrawerContentScrollView {...props}>
+      {/* Render the original drawer items */}
+      <DrawerItemList {...props} />
+      {/* Add your additional button */}
+      {state.user && (
+        <View style={{ padding: 20 }}>
+          <Pressable
+            style={{ backgroundColor: "#D32F2F", padding: 10, borderRadius: 5 }}
+            onPress={logout}
+          >
+            <Text style={{ color: "#fff" }}>Logout</Text>
+          </Pressable>
+        </View>
+      )}
+    </DrawerContentScrollView>
+  );
+};
 
 export default function App() {
   const Drawer = createDrawerNavigator();
@@ -18,12 +47,22 @@ export default function App() {
   return (
     <NavigationContainer>
       {state.authIsReady && (
-        <Drawer.Navigator initialRouteName="Home">
+        <Drawer.Navigator
+          initialRouteName="Home"
+          drawerContent={(props) => <CustomDrawerContent {...props} />}
+        >
           {state.user ? (
             <>
               <Drawer.Screen name="Home" component={Home} />
               <Drawer.Screen name="Albums" component={Albums} />
-              <Drawer.Screen name="CreatePosts" component={CreatePosts} />
+              <Drawer.Screen
+                name="CreatePosts"
+                initialParams={{
+                  locationPath: "createPost",
+                  id: "",
+                }}
+                component={CreatePosts}
+              />
               <Drawer.Screen name="Posts" component={Posts} />
             </>
           ) : (

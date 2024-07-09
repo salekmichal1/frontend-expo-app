@@ -15,7 +15,7 @@ export function useLogin() {
     setError(null);
 
     try {
-      localStorage.removeItem("token");
+      // localStorage.removeItem("token");
 
       const res = await fetch(
         "https://front-end-app-server.onrender.com/users"
@@ -41,7 +41,7 @@ export function useLogin() {
 
       if (user) {
         // dispatch login action
-        localStorage.setItem("token", user.token);
+        // localStorage.setItem("token", user.token);
         dispatch({ type: UserSateType.LOGIN, payload: user });
         // navigation.navigate({ name: "Home" });
         // navigation.dispatch(CommonActions.navigate({ name: "Home" }));

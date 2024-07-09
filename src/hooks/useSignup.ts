@@ -18,7 +18,7 @@ export function useSignup() {
     setIsPending(true);
 
     try {
-      localStorage.removeItem("token");
+      // localStorage.removeItem("token");
       // finding last id, to add new one
       const res = await fetch(
         "https://front-end-app-server.onrender.com/users"
@@ -82,7 +82,7 @@ export function useSignup() {
           if (!res) {
             throw new Error("Signup went wrong");
           }
-          localStorage.setItem("token", token);
+          // localStorage.setItem("token", token);
           console.log(user);
           dispatch({ type: UserSateType.LOGIN, payload: user });
         } else {

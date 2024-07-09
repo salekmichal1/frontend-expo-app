@@ -134,7 +134,7 @@ function Comments({
 
   return (
     <ScrollView style={styles.commentsContainer}>
-      <Text>Comments:</Text>
+      <Text style={styles.commentBody}>Comments:</Text>
       <View>
         {commentsPending && <Text>Loading...</Text>}
         {commentsError && <Text>{commentsError.toString()}</Text>}
@@ -143,7 +143,7 @@ function Comments({
             comment.postId === postId ? (
               <Fragment key={comment.id}>
                 <Text style={styles.commentUser}>User: @{comment.email}</Text>
-                <Text>Wrote: {comment.body}</Text>
+                <Text style={styles.commentBody}>Wrote: {comment.body}</Text>
               </Fragment>
             ) : null
           )}
@@ -172,6 +172,12 @@ const styles = StyleSheet.create({
   commentUser: {
     marginTop: 20,
     marginBottom: 2,
+    color: "#f5f5f5",
+    fontStyle: "italic",
+  },
+  commentBody: {
+    color: "#f5f5f5",
+    fontStyle: "italic",
   },
   commentsForm: {
     color: "#f5f5f5",
@@ -183,6 +189,7 @@ const styles = StyleSheet.create({
     display: "flex",
     marginVertical: 30,
     fontSize: 20,
+    color: "#f5f5f5",
   },
   textarea: {
     color: "#333",
@@ -194,7 +201,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     width: "100%",
     minHeight: 44,
-    fontFamily: "Poppins, sans-serif",
   },
   commentsContainerBtn: {
     marginTop: 25,

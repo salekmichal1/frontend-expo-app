@@ -14,7 +14,7 @@ export function useLogout() {
     try {
       if (state.user) {
         dispatch({ type: UserSateType.LOGOUT, payload: null });
-        localStorage.removeItem("token");
+        // localStorage.removeItem("token");
       }
     } catch (err: any) {
       console.error(err.messege);

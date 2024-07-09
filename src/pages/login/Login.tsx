@@ -4,6 +4,7 @@ import { useLogin } from "../../hooks/useLogin";
 import { GestureResponderEvent, View } from "react-native";
 import { StyleSheet } from "react-native";
 import { CommonActions, useNavigation } from "@react-navigation/native";
+import { TextInput } from "react-native";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -20,8 +21,8 @@ export default function Login() {
       <Text h2>Login</Text>
       <View style={styles.label}>
         <Text style={styles.span}>Email:</Text>
-        <Input
-          inputStyle={styles.input}
+        <TextInput
+          style={styles.input}
           onChangeText={setEmail}
           value={email}
           keyboardType="email-address"
@@ -30,8 +31,8 @@ export default function Login() {
       </View>
       <View style={styles.label}>
         <Text style={styles.span}>Password:</Text>
-        <Input
-          inputStyle={styles.input}
+        <TextInput
+          style={styles.input}
           onChangeText={setPasswrod}
           value={password}
           secureTextEntry={true}
@@ -48,26 +49,19 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: {
     color: "#f5f5f5",
-    maxWidth: 300,
     margin: 40,
-    alignSelf: "center",
+    flex: 1,
   },
   label: {
-    display: "flex",
     margin: 30,
   },
   span: {
-    display: "flex",
     marginBottom: 6,
   },
   input: {
-    color: "#333",
-    padding: 8,
-    fontSize: 16,
-    borderRadius: 4,
-    borderColor: "#d4d4d4",
-    backgroundColor: "#fff",
-    width: "100%",
-    fontFamily: "Poppins, sans-serif",
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });

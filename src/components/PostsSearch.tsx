@@ -1,5 +1,6 @@
 import React from "react";
+import { Text } from "react-native";
 
 export default function PostsSearch() {
-  return <div>PostsSearch</div>;
+  return <Text>PostsSeacrh</Text>;
 }

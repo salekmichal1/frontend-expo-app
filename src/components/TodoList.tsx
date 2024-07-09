@@ -117,10 +117,7 @@ export default function TodoList(todos: { todos: Todo[] }) {
   // };
 
   return (
-    <ScrollView
-      style={{ width: "100%" }}
-      contentContainerStyle={styles.todoList}
-    >
+    <View style={styles.todoList}>
       {todosArr.map((todo) => (
         <LinearGradient
           colors={["#39b385", "#9be15d"]}
@@ -129,40 +126,44 @@ export default function TodoList(todos: { todos: Todo[] }) {
         >
           <View style={styles.todoIcons}>
             {todo.completed === true ? (
-              <BlockIcon
-                width={24}
-                onClick={() => {
+              <Pressable
+                onPress={() => {
                   setTodoUrlIdStatus(todo.id);
                   setTaskCompleted(false);
 
                   todo.completed = false;
                 }}
-              />
+              >
+                <BlockIcon width={24} height={24} fill={"#000"} />
+              </Pressable>
             ) : (
-              <DoneIcon
-                width={28}
-                onClick={() => {
+              <Pressable
+                onPress={() => {
                   setTodoUrlIdStatus(todo.id);
                   setTaskCompleted(true);
 
                   todo.completed = true;
                 }}
-              />
+              >
+                <DoneIcon width={24} height={24} fill={"#000"} />
+              </Pressable>
             )}
-            <EditIcon
-              width={24}
-              onClick={() => {
+            <Pressable
+              onPress={() => {
                 handleEditStart(todo.id);
                 setTodoUrlIdEdit(todo.id);
               }}
-            />
-            <DeleteIcon
-              width={30}
-              onClick={() => {
+            >
+              <EditIcon width={24} height={24} fill={"#000"} />
+            </Pressable>
+            <Pressable
+              onPress={() => {
                 setTodoDeleteId(todo.id);
                 // handleDelete(todo.id);
               }}
-            />
+            >
+              <DeleteIcon width={26} height={26} fill={"#000"} />
+            </Pressable>
           </View>
           <Text>Status: {todo.completed ? "Finished" : "Unfinished"}</Text>
 
@@ -188,7 +189,7 @@ export default function TodoList(todos: { todos: Todo[] }) {
       <Pressable style={styles.todoBtn} onPress={handleAddTodo}>
         <Text style={styles.todoBtnText}>Add todo</Text>
       </Pressable>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -203,9 +204,8 @@ const styles = StyleSheet.create({
     marginTop: 80,
     marginBottom: 80,
     flex: 1,
-    alignItems: "center",
     justifyContent: "space-between",
-    gap: 10,
+    gap: 20,
   },
   todo: {
     width: 300,

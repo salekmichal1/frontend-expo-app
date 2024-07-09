@@ -83,13 +83,22 @@ export default function Posts() {
       <View style={styles.postsControls}>
         <PostsSearch />
         <TouchableOpacity
-          style={styles.createPostBtn}
-          onPress={() => navigation.dispatch(CommonActions.navigate("CreatePost"))}
+          style={styles.postItemBtn}
+          onPress={() =>
+            navigation.dispatch(
+              CommonActions.navigate({
+                name: "CreatePosts",
+                params: {
+                  locationPath: "createPost",
+                },
+              })
+            )
+          }
         >
-          <Text>Add post</Text>
+          <Text style={styles.postBtnText}>Add post</Text>
         </TouchableOpacity>
       </View>
-      {postsIsPending && usersPending && <p className="loading">Loading...</p>}
+      {postsIsPending && usersPending && <Text>Loading...</Text>}
       {postsError && usersError && (
         <Text>
           {postsError.toString()}, {usersError.toString()}
@@ -102,7 +111,7 @@ export default function Posts() {
             <View key={post.id} style={styles.postItem}>
               <Text style={styles.postItemTitle}>Title: {post.title}</Text>
               <Text style={styles.postItemContent}>{post.body}</Text>
-              <Text>
+              <Text style={styles.postItemContent}>
                 Post created by: #
                 {usersData.some((user) => user.id === post.userId)
                   ? usersData
@@ -114,15 +123,25 @@ export default function Posts() {
                 <>
                   <TouchableOpacity
                     style={styles.postItemBtn}
-                    onPress={() => null}
+                    onPress={() =>
+                      navigation.dispatch(
+                        CommonActions.navigate({
+                          name: "CreatePosts",
+                          params: {
+                            locationPath: "edit",
+                            id: post.id,
+                          },
+                        })
+                      )
+                    }
                   >
-                    <Text>Edit post</Text>
+                    <Text style={styles.postBtnText}>Edit post</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.postItemBtn}
                     onPress={() => handleDelete(post.id)}
                   >
-                    <Text>Delete post</Text>
+                    <Text style={styles.postBtnText}>Delete post</Text>
                   </TouchableOpacity>
                 </>
               )}
@@ -140,7 +159,7 @@ export default function Posts() {
                   commentsError={commentsError}
                 />
               )}
-              {!commentsData && <p className="loading">No comments to load</p>}
+              {!commentsData && <Text>No comments to load</Text>}
             </View>
           ))}
       </View>
@@ -162,14 +181,7 @@ const styles = StyleSheet.create({
     margin: 20,
     alignSelf: "center",
   },
-  createPostBtn: {
-    alignSelf: "center",
-    marginTop: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    backgroundColor: "#007bff", // Adjust as needed
-    borderRadius: 4,
-  },
+
   posts: {
     width: "100%",
   },
@@ -192,10 +204,24 @@ const styles = StyleSheet.create({
     color: "#f5f5f5",
   },
   postItemBtn: {
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 3, // Add some elevation for Android
+    shadowColor: "#000", // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
     marginTop: 10,
-    marginRight: 16,
-    backgroundColor: "#007bff", // Adjust as needed
-    padding: 10,
-    borderRadius: 4,
+    backgroundColor: "#4CAF50",
+  },
+  postBtnText: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
   },
 });

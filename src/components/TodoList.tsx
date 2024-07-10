@@ -118,6 +118,7 @@ export default function TodoList(todos: { todos: Todo[] }) {
 
   return (
     <View style={styles.todoList}>
+      <Text style={styles.todoListHead}>Todo List</Text>
       {todosArr.map((todo) => (
         <LinearGradient
           colors={["#39b385", "#9be15d"]}
@@ -200,6 +201,12 @@ import { LinearGradient } from "expo-linear-gradient";
 const windowHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  todoListHead: {
+    color: "#222",
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 36,
+  },
   todoList: {
     marginTop: 80,
     marginBottom: 80,

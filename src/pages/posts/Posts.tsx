@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import Comments from "./../../components/Comments";
 import PostsSearch from "./../../components/PostsSearch";
 import { useAuthContext } from "../../hooks/useAuthContext";
@@ -7,7 +6,11 @@ import { useFetch } from "../../hooks/useFetch";
 import { Comment, Post, UserElement } from "../../model/types";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native";
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import {
+  CommonActions,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 
 export default function Posts() {
   const { state } = useAuthContext();
@@ -19,6 +22,7 @@ export default function Posts() {
     isPending: postsIsPending,
     error: postsError,
   } = useFetch<Post[]>("https://front-end-app-server.onrender.com/posts");
+  const [posts, setPosts] = useState<Post[] | null>(postsData);
 
   const { deleteData: deltePosts, data: postDeleteData } = useFetch<Post>(
     `https://front-end-app-server.onrender.com/posts/${postForDeleteId}`,
@@ -72,13 +76,26 @@ export default function Posts() {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true; // Flag to indicate the component is mounted
+
+      getPosts();
+
+      return () => {
+        isActive = false; // Component is unmounted, set isActive to false
+        // Any other cleanup logic can go here
+      };
+    }, [])
+  );
+
   useEffect(() => {
     deleteComments();
     getPosts();
   }, [postDeleteData]);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.postsHead}>Posts</Text>
       <View style={styles.postsControls}>
         <PostsSearch />
@@ -170,16 +187,16 @@ export default function Posts() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
   },
   postsHead: {
-    color: "#f5f5f5",
+    color: "#222",
     textAlign: "center",
     marginTop: 20,
     fontSize: 36,
   },
   postsControls: {
     margin: 20,
-    alignSelf: "center",
   },
 
   posts: {

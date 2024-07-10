@@ -17,6 +17,7 @@ import {
 } from "@react-navigation/drawer";
 import { View } from "react-native";
 import { useLogout } from "./src/hooks/useLogout";
+import CreateAlbums from "./src/pages/createAlbums/CreateAlbums";
 
 const CustomDrawerContent = (props: any) => {
   const { state } = useAuthContext();
@@ -56,6 +57,16 @@ export default function App() {
               <Drawer.Screen name="Home" component={Home} />
               <Drawer.Screen name="Albums" component={Albums} />
               <Drawer.Screen
+                name="CreateAlbums"
+                component={CreateAlbums}
+                initialParams={{
+                  locationPath: "createAlbum",
+                  id: null,
+                }}
+              />
+
+              <Drawer.Screen name="Posts" component={Posts} />
+              <Drawer.Screen
                 name="CreatePosts"
                 initialParams={{
                   locationPath: "createPost",
@@ -63,7 +74,6 @@ export default function App() {
                 }}
                 component={CreatePosts}
               />
-              <Drawer.Screen name="Posts" component={Posts} />
             </>
           ) : (
             <>

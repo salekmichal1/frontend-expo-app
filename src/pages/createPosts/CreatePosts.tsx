@@ -5,8 +5,11 @@ import { Post } from "../../model/types";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native";
+import { GestureResponderEvent } from "react-native";
 
 export default function CreatePost({ route }: { route: any }) {
+  const { state } = useAuthContext();
+
   const [title, setTitle] = useState<string>("");
   const [postUserId, setPostUserId] = useState<number>();
   const [content, setContent] = useState<string>("");
@@ -14,7 +17,6 @@ export default function CreatePost({ route }: { route: any }) {
   const [error, setError] = useState<Error | null>(null);
   const navigation = useNavigation();
   const { locationPath, id } = route.params;
-  console.log(locationPath, id);
 
   useEffect(() => {
     setIsPending(true);
@@ -47,30 +49,36 @@ export default function CreatePost({ route }: { route: any }) {
     } else {
       setTitle("");
       setContent("");
+      setPostUserId(state.user?.id);
       setIsPending(false);
     }
   }, [locationPath, id]);
 
-  const { patchData, data } = useFetch<Post>(
+  const { patchData, data: patchRes } = useFetch<Post>(
     "https://front-end-app-server.onrender.com/posts/" + id,
     "PATCH"
   );
-  const handleSubmit = function () {
+
+  const handleSubmit = function (e: GestureResponderEvent) {
+    e.preventDefault();
     patchData({
+      userId: postUserId,
       title: title,
       body: content,
     });
+
+    console.log(locationPath, id, patchRes);
   };
 
   useEffect(() => {
-    if (data) {
+    if (patchRes) {
       navigation.dispatch(
         CommonActions.navigate({
           name: "Posts",
         })
       );
     }
-  }, [data]);
+  }, [patchRes]);
 
   return (
     // <div>
@@ -131,7 +139,12 @@ export default function CreatePost({ route }: { route: any }) {
             multiline
             numberOfLines={4}
           />
-          <Pressable style={styles.btn} onPress={handleSubmit}>
+          <Pressable
+            style={styles.btn}
+            onPress={(e) => {
+              handleSubmit(e);
+            }}
+          >
             <Text style={styles.btnText}>Submit</Text>
           </Pressable>
         </View>
@@ -145,7 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   createPostHead: {
-    color: "#f5f5f5",
+    color: "#222",
     textAlign: "center",
     marginTop: 20,
     fontSize: 36,
@@ -185,40 +198,3 @@ const styles = StyleSheet.create({
     color: "white",
   },
 });
-
-// const CreateEditPost = ({ route, navigation }) => {
-//   const [title, setTitle] = useState('');
-//   const [content, setContent] = useState('');
-//   const [isEditing, setIsEditing] = useState(false);
-
-//   // Determine if editing or creating based on route params
-//   useEffect(() => {
-//     if (route.params?.postId) {
-//       setIsEditing(true);
-//       // Load post data for editing
-//       // This is a placeholder, replace with your actual data loading logic
-//       setTitle('Existing Post Title');
-//       setContent('Existing Post Content');
-//     }
-//   }, [route.params?.postId]);
-
-//   const handleSubmit = async () => {
-//     if (isEditing) {
-//       // Call API to edit post
-//       console.log('Editing post with title:', title);
-//     } else {
-//       // Call API to create post
-//       console.log('Creating post with title:', title);
-//     }
-//     // After submission, navigate back or show success message
-//   };
-
-//   return (
-//     <View>
-//       <TextInput placeholder="Title" value={title} onChangeText={setTitle} />
-//       <TextInput placeholder="Content" value={content} multiline onChangeText={setContent} />
-//       <Button title={isEditing ? 'Edit Post' : 'Create Post'} onPress={handleSubmit} />
-//       {/* Error message display logic here */}
-//     </View>
-//   );
-// };

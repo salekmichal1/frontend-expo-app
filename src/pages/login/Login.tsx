@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Button, Input, Text } from "react-native-elements";
 import { useLogin } from "../../hooks/useLogin";
-import { GestureResponderEvent, View } from "react-native";
+import { GestureResponderEvent, Pressable, View } from "react-native";
 import { StyleSheet } from "react-native";
-import { CommonActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native";
 
 export default function Login() {
@@ -14,7 +14,6 @@ export default function Login() {
     e.preventDefault();
     login(email, password);
   };
-  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -39,8 +38,17 @@ export default function Login() {
           autoCapitalize="none"
         />
       </View>
-      {!isPending && <Button title="Login" onPress={handleLogin} />}
-      {isPending && <Button title="Loading" />}
+
+      {!isPending && (
+        <Pressable style={styles.btn} onPress={handleLogin}>
+          <Text style={styles.btnText}>Login</Text>
+        </Pressable>
+      )}
+      {isPending && (
+        <Pressable style={styles.btn} disabled>
+          <Text style={styles.btnText}>Loading</Text>
+        </Pressable>
+      )}
       {error && <Text>{error.toString()}</Text>}
     </View>
   );
@@ -63,5 +71,26 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
+  },
+  btn: {
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 3, //  elevation for Android
+    shadowColor: "#000", // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    marginTop: 10,
+    backgroundColor: "#4CAF50",
+  },
+  btnText: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
   },
 });

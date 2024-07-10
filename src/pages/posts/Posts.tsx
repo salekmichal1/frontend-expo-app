@@ -1,20 +1,27 @@
 import { useCallback, useEffect, useState } from "react";
 import Comments from "./../../components/Comments";
-import PostsSearch from "./../../components/PostsSearch";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useFetch } from "../../hooks/useFetch";
 import { Comment, Post, UserElement } from "../../model/types";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native";
+import {
+  Dimensions,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import {
   CommonActions,
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
+import { TextInput } from "react-native";
 
 export default function Posts() {
   const { state } = useAuthContext();
   const [postForDeleteId, setPostForDeleteId] = useState<number>();
+  const [searchTerm, setSearchTerm] = useState("");
   const navigation = useNavigation();
   const {
     getData: getPosts,
@@ -22,7 +29,6 @@ export default function Posts() {
     isPending: postsIsPending,
     error: postsError,
   } = useFetch<Post[]>("https://front-end-app-server.onrender.com/posts");
-  const [posts, setPosts] = useState<Post[] | null>(postsData);
 
   const { deleteData: deltePosts, data: postDeleteData } = useFetch<Post>(
     `https://front-end-app-server.onrender.com/posts/${postForDeleteId}`,
@@ -78,13 +84,12 @@ export default function Posts() {
 
   useFocusEffect(
     useCallback(() => {
-      let isActive = true; // Flag to indicate the component is mounted
+      let isActive = true;
 
       getPosts();
 
       return () => {
         isActive = false; // Component is unmounted, set isActive to false
-        // Any other cleanup logic can go here
       };
     }, [])
   );
@@ -94,12 +99,21 @@ export default function Posts() {
     getPosts();
   }, [postDeleteData]);
 
+  const filteredPosts = postsData?.filter((post) =>
+    post.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search posts by title..."
+        value={searchTerm}
+        onChangeText={setSearchTerm}
+      />
       <Text style={styles.postsHead}>Posts</Text>
       <View style={styles.postsControls}>
-        <PostsSearch />
-        <TouchableOpacity
+        <Pressable
           style={styles.postItemBtn}
           onPress={() =>
             navigation.dispatch(
@@ -113,7 +127,7 @@ export default function Posts() {
           }
         >
           <Text style={styles.postBtnText}>Add post</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
       {postsIsPending && usersPending && <Text>Loading...</Text>}
       {postsError && usersError && (
@@ -122,9 +136,9 @@ export default function Posts() {
         </Text>
       )}
       <View style={styles.posts}>
-        {postsData &&
+        {filteredPosts &&
           usersData &&
-          postsData.map((post) => (
+          filteredPosts.map((post) => (
             <View key={post.id} style={styles.postItem}>
               <Text style={styles.postItemTitle}>Title: {post.title}</Text>
               <Text style={styles.postItemContent}>{post.body}</Text>
@@ -138,7 +152,7 @@ export default function Posts() {
               </Text>
               {state.user?.id === post.userId && (
                 <>
-                  <TouchableOpacity
+                  <Pressable
                     style={styles.postItemBtn}
                     onPress={() =>
                       navigation.dispatch(
@@ -153,13 +167,13 @@ export default function Posts() {
                     }
                   >
                     <Text style={styles.postBtnText}>Edit post</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
+                  </Pressable>
+                  <Pressable
                     style={styles.postItemBtn}
                     onPress={() => handleDelete(post.id)}
                   >
                     <Text style={styles.postBtnText}>Delete post</Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 </>
               )}
               {/* {commentsData &&
@@ -184,10 +198,24 @@ export default function Posts() {
   );
 }
 
+const windowWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     alignItems: "center",
+  },
+  searchInput: {
+    color: "#333",
+    padding: 8,
+    marginTop: 20,
+    fontSize: 16,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#d4d4d4",
+    backgroundColor: "#fff",
+    height: 44,
+    width: windowWidth * 0.7,
   },
   postsHead: {
     color: "#222",
@@ -226,7 +254,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 3, // Add some elevation for Android
+    elevation: 3, // elevation for Android
     shadowColor: "#000", // Shadow for iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

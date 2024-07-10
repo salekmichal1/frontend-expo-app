@@ -131,9 +131,9 @@ export default function TodoList(todos: { todos: Todo[] }) {
                 onPress={() => {
                   setTodoUrlIdStatus(todo.id);
                   setTaskCompleted(false);
-
                   todo.completed = false;
                 }}
+                style={{ marginRight: 4 }}
               >
                 <BlockIcon width={24} height={24} fill={"#000"} />
               </Pressable>
@@ -146,7 +146,7 @@ export default function TodoList(todos: { todos: Todo[] }) {
                   todo.completed = true;
                 }}
               >
-                <DoneIcon width={24} height={24} fill={"#000"} />
+                <DoneIcon width={26} height={26} fill={"#000"} />
               </Pressable>
             )}
             <Pressable
@@ -163,7 +163,7 @@ export default function TodoList(todos: { todos: Todo[] }) {
                 // handleDelete(todo.id);
               }}
             >
-              <DeleteIcon width={26} height={26} fill={"#000"} />
+              <DeleteIcon width={30} height={30} fill={"#000"} />
             </Pressable>
           </View>
           <Text>Status: {todo.completed ? "Finished" : "Unfinished"}</Text>
@@ -198,7 +198,7 @@ import { StyleSheet } from "react-native";
 import { Text } from "react-native-elements";
 import { LinearGradient } from "expo-linear-gradient";
 
-const windowHeight = Dimensions.get("window").height;
+const windowWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   todoListHead: {
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   todo: {
-    width: 300,
+    width: windowWidth * 0.8,
     color: "#222",
     padding: 20,
     paddingBottom: 40,
@@ -231,24 +231,8 @@ const styles = StyleSheet.create({
   todoIcons: {
     flexDirection: "row",
     justifyContent: "flex-end",
-  },
-  todoIcon: {
-    cursor: "pointer", // Note: 'cursor' is not supported in React Native. Interactivity is handled differently.
-  },
-  deleteIcon: {
-    width: 30,
-  },
-  editIcon: {
-    width: 24,
-    marginRight: 2,
-  },
-  doneIcon: {
-    width: 28,
-    marginRight: 2,
-  },
-  blockIcon: {
-    marginRight: 6,
-    width: 24,
+    gap: 10,
+    alignItems: "center",
   },
   todoInputBox: {
     flexDirection: "row",
@@ -260,9 +244,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#444",
     color: "#fff",
     fontSize: 16,
-    width: "100%",
     borderRadius: 4,
     padding: 6,
+    width: windowWidth * 0.6,
   },
   todoBtn: {
     paddingVertical: 12,
@@ -270,7 +254,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 3, // Add some elevation for Android
+    elevation: 3, // elevation for Android
     shadowColor: "#000", // Shadow for iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

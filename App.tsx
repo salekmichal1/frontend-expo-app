@@ -18,6 +18,7 @@ import {
 import { View } from "react-native";
 import { useLogout } from "./src/hooks/useLogout";
 import CreateAlbums from "./src/pages/createAlbums/CreateAlbums";
+import UserPanel from "./src/pages/userPanel/UserPanel";
 
 const CustomDrawerContent = (props: any) => {
   const { state } = useAuthContext();
@@ -74,6 +75,7 @@ export default function App() {
                 }}
                 component={CreatePosts}
               />
+              <Drawer.Screen name="UserPanel" component={UserPanel} />
             </>
           ) : (
             <>

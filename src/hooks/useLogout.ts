@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { UserSateType } from "../context/AuthContext";
 import { useAuthContext } from "./useAuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function useLogout() {
   const [error, setError] = useState<Error | null>(null);
@@ -13,6 +14,7 @@ export function useLogout() {
 
     try {
       if (state.user) {
+        await AsyncStorage.removeItem("userToken");
         dispatch({ type: UserSateType.LOGOUT, payload: null });
         // localStorage.removeItem("token");
       }

@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-// import AlbumsSearch from "../../components/AlbumsSearch";
+import { useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useFetch } from "../../hooks/useFetch";
 import { Album, Photo } from "../../model/types";
@@ -8,13 +7,16 @@ import AlbumsSearch from "../../components/AlbumsSearch";
 import {
   ScrollView,
   View,
-  TouchableOpacity,
   Text,
   Pressable,
   StyleSheet,
+  Dimensions,
 } from "react-native";
-import { CommonActions, useNavigation } from "@react-navigation/native";
-// import style from "./Albums.module.css";
+import {
+  CommonActions,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 
 export default function Albums() {
   const { state } = useAuthContext();
@@ -72,19 +74,31 @@ export default function Albums() {
     getAlbumData();
   }, [albumDeleteData, photosData]);
 
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      getAlbumData();
+
+      return () => {
+        isActive = false; // Component is unmounted, set isActive to false
+      };
+    }, [])
+  );
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.albumsHead}>Albums</Text>
       <View style={styles.albumsControls}>
         <AlbumsSearch />
-        <TouchableOpacity
+        <Pressable
           style={styles.albumsBtn}
           onPress={() =>
             navigation.dispatch(CommonActions.navigate("CreateAlbums"))
           }
         >
           <Text style={styles.albumsBtnText}>Add album</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
       {isPending && <Text>Loading...</Text>}
       {error && <Text>{error.toString()}</Text>}
@@ -124,7 +138,7 @@ export default function Albums() {
     </ScrollView>
   );
 }
-
+const windowWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -134,14 +148,13 @@ const styles = StyleSheet.create({
     marginTop: 40,
     marginBottom: 40,
     alignItems: "center",
-    width: "100%",
   },
   albumsItem: {
-    width: 300,
+    width: windowWidth * 0.8,
     backgroundColor: "#616161",
     borderRadius: 4,
     padding: 20,
-    marginBottom: 40, // Adjusted for React Native layout
+    marginBottom: 40,
   },
 
   albumsBtn: {
@@ -150,7 +163,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 3, // Add some elevation for Android
+    elevation: 3, // elevation for Android
     shadowColor: "#000", // Shadow for iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

@@ -92,9 +92,9 @@ import {
   ScrollView,
   StyleSheet,
 } from "react-native";
-import { useAuthContext } from "../hooks/useAuthContext"; // Adjust import path as needed
-import { useFetch } from "../hooks/useFetch"; // Adjust import path as needed
-import { Comment } from "../model/types"; // Adjust import path as needed
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useFetch } from "../hooks/useFetch";
+import { Comment } from "../model/types";
 
 function Comments({
   postId,
@@ -139,12 +139,20 @@ function Comments({
         {commentsPending && <Text>Loading...</Text>}
         {commentsError && <Text>{commentsError.toString()}</Text>}
         {commentDataState &&
-          commentDataState.map((comment) =>
+          commentDataState.map((comment, index) =>
             comment.postId === postId ? (
-              <Fragment key={comment.id}>
+              <View
+                key={comment.id}
+                style={[
+                  styles.commentContainer,
+                  index === commentDataState.length - 1
+                    ? styles.lastCommentContainer
+                    : {},
+                ]}
+              >
                 <Text style={styles.commentUser}>User: @{comment.email}</Text>
                 <Text style={styles.commentBody}>Wrote: {comment.body}</Text>
-              </Fragment>
+              </View>
             ) : null
           )}
       </View>
@@ -179,6 +187,14 @@ const styles = StyleSheet.create({
     color: "#f5f5f5",
     fontStyle: "italic",
   },
+  commentContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#fff",
+    paddingBottom: 20,
+  },
+  lastCommentContainer: {
+    borderBottomWidth: 0,
+  },
   commentsForm: {
     color: "#f5f5f5",
     margin: 20,
@@ -199,7 +215,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#d4d4d4",
     backgroundColor: "#fff",
-    width: "100%",
     minHeight: 44,
   },
   commentsContainerBtn: {

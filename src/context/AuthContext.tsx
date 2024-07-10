@@ -1,5 +1,6 @@
 import React, { createContext, Dispatch, useEffect, useReducer } from "react";
 import { UserElement } from "../model/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export enum UserSateType {
   LOGIN = "LOGIN",
@@ -84,19 +85,53 @@ export const AuthContextProvider = function ({
     // } else {
     //   dispatch({ type: UserSateType.AUTH_IS_READY, payload: null });
     // }
-    dispatch({
-      type: UserSateType.AUTH_IS_READY,
-      payload: {
-        email: "abc@gmail.com",
-        id: 1,
-        name: "Tomek Tomek",
-        password: "zaq1@WSX",
-        phone: "1-770-736-8031 x56442",
-        token:
-          "set7iu7r89r57zfnp6ful4dneb00scum6-09kxnrjy4npan9kmgi2cnxn0dz9riuyhzf",
-        username: "Tom",
-      },
-    });
+    // dispatch({
+    //   type: UserSateType.AUTH_IS_READY,
+    //   payload: {
+    //     email: "abc@gmail.com",
+    //     id: 1,
+    //     name: "Tomek Tomek",
+    //     password: "zaq1@WSX",
+    //     phone: "1-770-736-8031 x56442",
+    //     token:
+    //       "set7iu7r89r57zfnp6ful4dneb00scum6-09kxnrjy4npan9kmgi2cnxn0dz9riuyhzf",
+    //     username: "Tom",
+    //   },
+    // });
+    const checkAndFindUserByToken = async () => {
+      const token = await AsyncStorage.getItem("userToken");
+      if (token !== null) {
+        const findUserByToken = async function () {
+          try {
+            const res = await fetch(
+              "https://front-end-app-server.onrender.com/users"
+            );
+            if (!res.ok) {
+              throw Error(res.statusText);
+            }
+            const data: UserElement[] = await res.json();
+
+            const user: UserElement | undefined = data.find(
+              (user) => user.token === token
+            );
+
+            if (user) {
+              dispatch({ type: UserSateType.AUTH_IS_READY, payload: user });
+            } else {
+              dispatch({ type: UserSateType.AUTH_IS_READY, payload: null });
+            }
+          } catch (err: any) {
+            console.error(err.message);
+          }
+        };
+
+        findUserByToken();
+      } else {
+        dispatch({ type: UserSateType.AUTH_IS_READY, payload: null });
+      }
+    };
+
+    checkAndFindUserByToken();
   }, []);
   console.log(state);
   return (

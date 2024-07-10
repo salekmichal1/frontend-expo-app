@@ -4,7 +4,14 @@ import { Album, Photo } from "../../model/types";
 // styles
 import { useFetch } from "../../hooks/useFetch";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { TextInput } from "react-native";
 import PhotoGallery from "../../components/PhotoGallery";
 import { CommonActions, useNavigation } from "@react-navigation/native";
@@ -305,7 +312,6 @@ export default function CreateAlbum({ route }: { route: any }) {
               photos={photos}
               handleDeletePhoto={handleDeletePhoto}
             />
-            ;
             {/* <LightGallery
               selector=".gallery-item"
               elementClassNames={style.photos__container}
@@ -330,11 +336,14 @@ export default function CreateAlbum({ route }: { route: any }) {
   );
 }
 
+const windowWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     paddingTop: 20,
     paddingBottom: 20,
+    alignSelf: "center",
+    maxWidth: windowWidth * 0.8,
   },
   createAlbumHead: {
     color: "#222",
@@ -358,8 +367,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#d4d4d4",
     backgroundColor: "#fff",
-    width: "100%",
     height: 44,
+    width: windowWidth * 0.7,
   },
   button: {
     paddingVertical: 12,
@@ -367,7 +376,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
-    elevation: 3, // Add some elevation for Android
+    elevation: 3, // elevation for Android
     shadowColor: "#000", // Shadow for iOS
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

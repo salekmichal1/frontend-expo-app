@@ -2,11 +2,22 @@ import { useState } from "react";
 import { UserSateType } from "../context/AuthContext";
 import { UserElement } from "../model/types";
 import { useAuthContext } from "./useAuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export function useSignup() {
   const [error, setError] = useState<Error | null>(null);
   const [isPending, setIsPending] = useState<boolean>(false);
   const { dispatch } = useAuthContext();
+
+  const saveToken = async (token: string) => {
+    try {
+      await AsyncStorage.setItem("userToken", token);
+      console.log("Token saved");
+    } catch (error) {
+      console.error("Error saving token:", error);
+    }
+  };
+
   const signup = async function (
     email: string,
     password: string,
@@ -20,6 +31,10 @@ export function useSignup() {
     try {
       // localStorage.removeItem("token");
       // finding last id, to add new one
+      if (!email || !password || !passwordConfirm || !nickname || !phone) {
+        throw Error("Provide all fields");
+      }
+
       const res = await fetch(
         "https://front-end-app-server.onrender.com/users"
       );
@@ -83,6 +98,7 @@ export function useSignup() {
             throw new Error("Signup went wrong");
           }
           // localStorage.setItem("token", token);
+          saveToken(user.token);
           console.log(user);
           dispatch({ type: UserSateType.LOGIN, payload: user });
         } else {

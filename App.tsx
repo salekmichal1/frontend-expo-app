@@ -71,7 +71,7 @@ export default function App() {
                 name="CreatePosts"
                 initialParams={{
                   locationPath: "createPost",
-                  id: "",
+                  id: null,
                 }}
                 component={CreatePosts}
               />

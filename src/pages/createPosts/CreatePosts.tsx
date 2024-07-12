@@ -71,6 +71,8 @@ export default function CreatePost({ route }: { route: any }) {
       title: title,
       body: content,
     });
+    setTitle("");
+    setContent("");
   };
 
   const handleSubmitUpdate = function (e: GestureResponderEvent) {
@@ -80,7 +82,8 @@ export default function CreatePost({ route }: { route: any }) {
       title: title,
       body: content,
     });
-
+    setTitle("");
+    setContent("");
     console.log(locationPath, id, patchRes);
   };
 

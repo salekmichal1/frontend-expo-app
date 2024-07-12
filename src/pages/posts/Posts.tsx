@@ -116,7 +116,15 @@ export default function Posts() {
         <Pressable
           style={styles.postItemBtn}
           onPress={() =>
-            navigation.dispatch(CommonActions.navigate("CreatePosts"))
+            navigation.dispatch(
+              CommonActions.navigate({
+                name: "CreatePosts",
+                params: {
+                  locationPath: "createPost",
+                  id: null,
+                },
+              })
+            )
           }
         >
           <Text style={styles.postBtnText}>Add post</Text>

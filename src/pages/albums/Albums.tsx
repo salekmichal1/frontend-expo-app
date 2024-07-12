@@ -94,7 +94,15 @@ export default function Albums() {
         <Pressable
           style={styles.albumsBtn}
           onPress={() =>
-            navigation.dispatch(CommonActions.navigate("CreateAlbums"))
+            navigation.dispatch(
+              CommonActions.navigate({
+                name: "CreateAlbums",
+                params: {
+                  locationPath: "createAlbum",
+                  id: null,
+                },
+              })
+            )
           }
         >
           <Text style={styles.albumsBtnText}>Add album</Text>

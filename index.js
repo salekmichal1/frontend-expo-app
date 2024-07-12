@@ -1,3 +1,4 @@
+import { registerRootComponent } from "expo";
 import App from "./App";
 import { AuthContextProvider } from "./src/context/AuthContext";
 
@@ -8,3 +9,5 @@ export default function index() {
     </AuthContextProvider>
   );
 }
+
+registerRootComponent(index);

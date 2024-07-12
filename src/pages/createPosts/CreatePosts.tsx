@@ -18,6 +18,16 @@ export default function CreatePost({ route }: { route: any }) {
   const navigation = useNavigation();
   const { locationPath, id } = route.params;
 
+  const { patchData, data: patchRes } = useFetch<Post>(
+    "https://front-end-app-server.onrender.com/posts/" + id,
+    "PATCH"
+  );
+
+  const { postData, data: postRes } = useFetch<Post>(
+    "https://front-end-app-server.onrender.com/posts/",
+    "POST"
+  );
+
   useEffect(() => {
     setIsPending(true);
 
@@ -49,17 +59,21 @@ export default function CreatePost({ route }: { route: any }) {
     } else {
       setTitle("");
       setContent("");
-      setPostUserId(state.user?.id);
       setIsPending(false);
     }
   }, [locationPath, id]);
 
-  const { patchData, data: patchRes } = useFetch<Post>(
-    "https://front-end-app-server.onrender.com/posts/" + id,
-    "PATCH"
-  );
+  const handleSubmitAdd = function (e: GestureResponderEvent) {
+    console.log("submit add");
 
-  const handleSubmit = function (e: GestureResponderEvent) {
+    postData({
+      userId: state.user?.id,
+      title: title,
+      body: content,
+    });
+  };
+
+  const handleSubmitUpdate = function (e: GestureResponderEvent) {
     e.preventDefault();
     patchData({
       userId: postUserId,
@@ -71,14 +85,14 @@ export default function CreatePost({ route }: { route: any }) {
   };
 
   useEffect(() => {
-    if (patchRes) {
+    if (patchRes || postRes) {
       navigation.dispatch(
         CommonActions.navigate({
           name: "Posts",
         })
       );
     }
-  }, [patchRes]);
+  }, [patchRes, postRes]);
 
   return (
     // <div>
@@ -121,8 +135,10 @@ export default function CreatePost({ route }: { route: any }) {
     // </div>
     <ScrollView contentContainerStyle={styles.container}>
       {error && <Text>{error.message}</Text>}
-      {isPending && <Text>Loading...</Text>}
-      {!isPending && (
+      {isPending && (
+        <Text style={{ textAlign: "center", fontSize: 24 }}>Loading...</Text>
+      )}
+      {!isPending && locationPath !== "edit" && (
         <View style={styles.create}>
           <Text style={styles.createPostHead}>Add new post</Text>
           <TextInput
@@ -142,10 +158,37 @@ export default function CreatePost({ route }: { route: any }) {
           <Pressable
             style={styles.btn}
             onPress={(e) => {
-              handleSubmit(e);
+              handleSubmitAdd(e);
             }}
           >
-            <Text style={styles.btnText}>Submit</Text>
+            <Text style={styles.btnText}>Add post</Text>
+          </Pressable>
+        </View>
+      )}
+      {!isPending && locationPath === "edit" && (
+        <View style={styles.create}>
+          <Text style={styles.createPostHead}>Update post</Text>
+          <TextInput
+            style={styles.input}
+            value={title}
+            onChangeText={setTitle}
+            placeholder="Post title"
+          />
+          <TextInput
+            style={[styles.input, styles.textarea]}
+            value={content}
+            onChangeText={setContent}
+            placeholder="Post content"
+            multiline
+            numberOfLines={4}
+          />
+          <Pressable
+            style={styles.btn}
+            onPress={(e) => {
+              handleSubmitUpdate(e);
+            }}
+          >
+            <Text style={styles.btnText}>Update</Text>
           </Pressable>
         </View>
       )}

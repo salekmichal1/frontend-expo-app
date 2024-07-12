@@ -230,7 +230,9 @@ export default function CreateAlbum({ route }: { route: any }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {error && <Text>{error.message}</Text>}
-      {isPending && <Text>Loading...</Text>}
+      {isPending && (
+        <Text style={{ textAlign: "center", fontSize: 24 }}>Loading...</Text>
+      )}
       {!isPending && locationPath !== "edit" && (
         // adding new gallery
         <View>
